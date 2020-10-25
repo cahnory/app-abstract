@@ -7,7 +7,8 @@
     "build": "babel src --out-dir lib --copy-files --delete-dir-on-start",
     "watch": "babel src --out-dir lib --copy-files --delete-dir-on-start --watch",
     "lint": "eslint .",
-    "start": "node lib"
+    "start": "node lib",
+    "start:dev": "nodemon lib"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
@@ -28,6 +29,7 @@
     "eslint-config-prettier": "^6.14.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.6",
     "prettier": "^2.1.2"
   }
 }
