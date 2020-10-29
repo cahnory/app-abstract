@@ -8,14 +8,15 @@
     "watch": "babel src --out-dir lib --copy-files --delete-dir-on-start --watch",
     "lint": "eslint .",
     "start": "node lib",
-    "start:dev": "nodemon lib"
+    "start:dev": "nodemon lib --watch lib --watch ../web-abstract-web/lib"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.19",
+    "web-abstract-web": "0.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
