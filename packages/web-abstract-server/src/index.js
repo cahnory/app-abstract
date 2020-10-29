@@ -1,10 +1,16 @@
 import express from 'express';
 import morgan from 'morgan';
+import webAppHandler from './handlers/webApp';
 import { IS_DEV, PORT } from './constants';
 
 const server = express()
   /* Request logger */
   .use(morgan(IS_DEV ? 'dev' : 'combined'))
+  /** Web app handler
+   *  - render app
+   *  - serv static assets
+   * */
+  .use(webAppHandler)
   .listen(PORT, (err) => {
     if (err) {
       // eslint-disable-next-line no-console
