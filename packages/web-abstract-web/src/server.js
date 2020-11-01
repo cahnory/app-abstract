@@ -3,14 +3,9 @@ import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import Document from './Document';
 import App from './App';
 
-export const manifest = __non_webpack_require__('./manifest.json');
-
-export const getResponse = () => {
+const getResponse = ({ scripts = [] }) => {
   const body = renderToStaticMarkup(
-    <Document
-      body={renderToString(<App />)}
-      scripts={[manifest.assets.vendors.js, manifest.assets.client.js]}
-    />,
+    <Document body={renderToString(<App />)} scripts={scripts} />,
   );
 
   return {
