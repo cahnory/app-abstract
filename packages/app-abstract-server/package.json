@@ -1,5 +1,5 @@
 {
-  "name": "web-abstract-server",
+  "name": "app-abstract-server",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "private": true,
@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "source-map-support": "^0.5.19",
-    "web-abstract-web": "0.1.0"
+    "app-abstract-web": "0.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

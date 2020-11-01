@@ -1,5 +1,5 @@
 import { Router, static as Static } from 'express';
-import { bundlePath, getResponse, publicPath } from 'web-abstract-web';
+import { bundlePath, getResponse, publicPath } from 'app-abstract-web';
 
 const webAppHandler = new Router()
   .use(publicPath, Static(bundlePath))
