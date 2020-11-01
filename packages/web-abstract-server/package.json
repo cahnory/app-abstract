@@ -7,8 +7,8 @@
     "build": "babel src --out-dir lib --copy-files --delete-dir-on-start",
     "watch": "babel src --out-dir lib --copy-files --delete-dir-on-start --watch",
     "lint": "eslint .",
-    "start": "node lib",
-    "start:dev": "nodemon lib --watch lib --watch ../web-abstract-web/lib"
+    "start": "NODE_ENV=production node lib",
+    "start:dev": "nodemon lib"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",

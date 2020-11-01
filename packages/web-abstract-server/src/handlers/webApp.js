@@ -1,8 +1,8 @@
 import { Router, static as Static } from 'express';
-import { getResponse, manifest } from 'web-abstract-web';
+import { bundlePath, getResponse, publicPath } from 'web-abstract-web';
 
 const webAppHandler = new Router()
-  .use(manifest.publicPath, Static(manifest.bundlePath))
+  .use(publicPath, Static(bundlePath))
   .use((req, res) => {
     const response = getResponse();
     res.status(response.status).send(response.body);

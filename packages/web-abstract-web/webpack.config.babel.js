@@ -1,11 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import path from 'path';
 import AssetPlugin from 'assets-webpack-plugin';
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import { WebpackPluginServe as ServePlugin } from 'webpack-plugin-serve';
 
-const OUTPUT_PATH = path.resolve(__dirname, 'lib');
-const PUBLIC_PATH = path.resolve(OUTPUT_PATH, 'public');
-const MANIFEST_OUTPUT = 'manifest.json';
-const PUBLIC_ROUTE = '/assets';
+import {
+  OUTPUT_PATH,
+  PUBLIC_PATH,
+  PUBLIC_ROUTE,
+  MANIFEST_OUTPUT,
+} from './constants';
 
 export default (_, { watch }) => [
   makeConfig({ isServer: false, isDevelopment: watch }),
@@ -22,14 +25,28 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
         server: ['./src/server'],
       }
     : {
-        client: './src/client',
-        vendors: ['react', 'react-dom'],
+        client: [
+          isDevelopment && 'webpack-plugin-serve/client',
+          './src/client',
+        ].filter(Boolean),
       },
   output: {
     publicPath: `${PUBLIC_ROUTE}/`,
     path: isServer ? OUTPUT_PATH : PUBLIC_PATH,
     libraryTarget: 'umd',
     filename: isServer ? '[name].js' : '[name].[contenthash].js',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 0,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -39,6 +56,11 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
         use: [
           {
             loader: 'babel-loader',
+            options: {
+              plugins: [
+                !isServer && isDevelopment && 'react-refresh/babel',
+              ].filter(Boolean),
+            },
           },
         ],
       },
@@ -57,23 +79,27 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     ],
   },
   plugins: [
+    isDevelopment &&
+      !isServer &&
+      new ServePlugin({
+        static: PUBLIC_PATH,
+        status: false,
+        hmr: true,
+        historyFallback: true,
+      }),
+    isDevelopment &&
+      !isServer &&
+      new ReactRefreshPlugin({
+        overlay: {
+          sockIntegration: 'wps',
+        },
+      }),
     !isServer &&
       new AssetPlugin({
         filename: MANIFEST_OUTPUT,
         path: OUTPUT_PATH,
         prettyPrint: true,
         fullPath: true,
-        processOutput: (assets) => {
-          return JSON.stringify(
-            {
-              publicPath: PUBLIC_ROUTE,
-              bundlePath: PUBLIC_PATH,
-              assets,
-            },
-            null,
-            2,
-          );
-        },
       }),
   ].filter(Boolean),
 });
