@@ -4,8 +4,8 @@ import { bundlePath, getResponse, publicPath } from 'app-abstract-web';
 const webAppHandler = new Router()
   .use(publicPath, Static(bundlePath))
   .use((req, res) => {
-    const response = getResponse();
-    res.status(response.status).send(response.body);
+    const { status, body } = getResponse({ url: req.url });
+    res.status(status).send(body);
   });
 
 export default webAppHandler;
