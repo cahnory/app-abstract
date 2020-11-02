@@ -3,18 +3,17 @@ const {
   OUTPUT_PATH,
   PUBLIC_PATH,
   PUBLIC_ROUTE,
-  MANIFEST_PATH,
+  STATS_PATH,
 } = require('./constants');
 
-let manifest;
+const SERVER_PATH = `${OUTPUT_PATH}/server`;
 let getResponse;
 
 if (process.env.NODE_ENV === 'production') {
   try {
-    manifest = require(MANIFEST_PATH);
-    getResponse = require(`${OUTPUT_PATH}/server`).default;
+    getResponse = require(SERVER_PATH).default;
   } catch (error) {
-    if (error.code === 'MODULE_NOT_FOUND') {
+    if (error.code === 'MODULE_NOT_FOUND' || error.code === 'ENOENT') {
       throw new Error('BUNDLE_NOT_BUILT');
     }
 
@@ -22,13 +21,16 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   try {
-    manifest = require(MANIFEST_PATH);
-    getResponse = require(`${OUTPUT_PATH}/server`).default;
+    getResponse = require(SERVER_PATH).default;
   } catch (error) {
-    manifest = { vendors: {}, client: {} };
+    if (error.code !== 'MODULE_NOT_FOUND' && error.code !== 'ENOENT') {
+      throw error;
+    }
+
     getResponse = () => ({
       status: 200,
-      body: `<html>
+      body: `<!DOCTYPE html>
+      <html>
         <head>
           <title>Bundle not built</title>
         </head>
@@ -50,21 +52,19 @@ if (process.env.NODE_ENV === 'production') {
     },
     () => {
       try {
-        delete require.cache[require.resolve(`${OUTPUT_PATH}/server`)];
-        getResponse = require(`${OUTPUT_PATH}/server`).default;
-      } catch (erro) {}
-
-      try {
-        delete require.cache[require.resolve(MANIFEST_PATH)];
-        manifest = require(MANIFEST_PATH);
-      } catch (erro) {}
+        delete require.cache[require.resolve(STATS_PATH)];
+        delete require.cache[require.resolve(SERVER_PATH)];
+        getResponse = require(SERVER_PATH).default;
+      } catch (error) {
+        if (error.code !== 'MODULE_NOT_FOUND' && error.code !== 'ENOENT') {
+          throw error;
+        }
+      }
     },
   );
 }
 
 module.exports.publicPath = PUBLIC_ROUTE;
 module.exports.bundlePath = PUBLIC_PATH;
-module.exports.getResponse = () =>
-  getResponse({
-    scripts: [manifest.vendors.js, manifest.client.js],
-  });
+module.exports.getResponse = ({ url }) =>
+  getResponse({ url, statsFile: STATS_PATH });

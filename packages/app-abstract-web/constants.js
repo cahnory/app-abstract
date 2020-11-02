@@ -3,13 +3,13 @@ const path = require('path');
 const OUTPUT_PATH = path.resolve(__dirname, 'lib');
 const PUBLIC_PATH = path.resolve(OUTPUT_PATH, 'public');
 const PUBLIC_ROUTE = '/assets';
-const MANIFEST_OUTPUT = 'manifest.json';
-const MANIFEST_PATH = path.join(OUTPUT_PATH, MANIFEST_OUTPUT);
+const STATS_FILENAME = '../loadable-stats.json';
+const STATS_PATH = path.resolve(PUBLIC_PATH, STATS_FILENAME);
 
 module.exports = {
   OUTPUT_PATH,
   PUBLIC_PATH,
   PUBLIC_ROUTE,
-  MANIFEST_OUTPUT,
-  MANIFEST_PATH,
+  STATS_FILENAME,
+  STATS_PATH,
 };
