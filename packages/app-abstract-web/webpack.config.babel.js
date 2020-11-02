@@ -1,13 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import AssetPlugin from 'assets-webpack-plugin';
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { WebpackPluginServe as ServePlugin } from 'webpack-plugin-serve';
+import LoadablePlugin from '@loadable/webpack-plugin';
+import webpack from 'webpack';
 
 import {
   OUTPUT_PATH,
   PUBLIC_PATH,
   PUBLIC_ROUTE,
-  MANIFEST_OUTPUT,
+  STATS_FILENAME,
 } from './constants';
 
 export default (_, { watch }) => [
@@ -36,18 +37,21 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     libraryTarget: 'umd',
     filename: isServer ? '[name].js' : '[name].[contenthash].js',
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      minSize: 0,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
+  optimization: isServer
+    ? {}
+    : {
+        runtimeChunk: 'single',
+        splitChunks: {
+          chunks: 'all',
+          minSize: 0,
+          cacheGroups: {
+            vendors: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+            },
+          },
         },
       },
-    },
-  },
   module: {
     rules: [
       {
@@ -58,6 +62,7 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
             loader: 'babel-loader',
             options: {
               plugins: [
+                '@loadable/babel-plugin',
                 !isServer && isDevelopment && 'react-refresh/babel',
               ].filter(Boolean),
             },
@@ -79,13 +84,19 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     ],
   },
   plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+    !isServer &&
+      new LoadablePlugin({
+        filename: STATS_FILENAME,
+      }),
     isDevelopment &&
       !isServer &&
       new ServePlugin({
         static: PUBLIC_PATH,
         status: false,
         hmr: true,
-        historyFallback: true,
       }),
     isDevelopment &&
       !isServer &&
@@ -93,13 +104,6 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
         overlay: {
           sockIntegration: 'wps',
         },
-      }),
-    !isServer &&
-      new AssetPlugin({
-        filename: MANIFEST_OUTPUT,
-        path: OUTPUT_PATH,
-        prettyPrint: true,
-        fullPath: true,
       }),
   ].filter(Boolean),
 });
