@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rm -rf ./lib && webpack --config ./webpack.config.babel.js --progress",
     "watch": "rm -rf ./lib && webpack --config ./webpack.config.babel.js --progress --watch",
-    "lint": "eslint src"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@loadable/component": "^5.14.1",
