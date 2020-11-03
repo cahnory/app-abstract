@@ -15,4 +15,5 @@ module.exports = {
     'no-use-before-define': 'off',
     'sort-imports': ['error', { ignoreDeclarationSort: true }],
   },
+  ignorePatterns: ['/lib', 'node_modules'],
 };

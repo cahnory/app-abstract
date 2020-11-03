@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src --out-dir lib --copy-files",
     "watch": "babel src --out-dir lib --copy-files --watch",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "start": "NODE_ENV=production node lib",
     "start:dev": "nodemon lib"
   },
