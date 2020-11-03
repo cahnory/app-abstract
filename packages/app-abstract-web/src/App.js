@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import loadable from '@loadable/component';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Error404Page from './pages/Error404Page';
 
 const HomePage = loadable(() => import('./pages/HomePage'), {
@@ -20,5 +21,9 @@ const App = ({ Router }) => (
     </Switch>
   </Router>
 );
+
+App.propTypes = {
+  Router: PropTypes.func.isRequired,
+};
 
 export default App;

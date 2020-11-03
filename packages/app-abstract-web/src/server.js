@@ -1,5 +1,6 @@
 import React from 'react';
-import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+import PropTypes from 'prop-types';
+import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import { ChunkExtractor } from '@loadable/server';
 import { StaticRouter } from 'react-router-dom';
 import Document from './Document';
@@ -8,10 +9,17 @@ import App from './App';
 const getResponse = ({ url, statsFile }) => {
   const routerContext = { status: 200 };
   const extractor = new ChunkExtractor({ statsFile, entrypoints: 'client' });
-  const Router = (props) => (
-    <StaticRouter location={url} context={routerContext} {...props} />
-  );
   let response = {};
+
+  const Router = ({ children }) => (
+    <StaticRouter location={url} context={routerContext}>
+      {children}
+    </StaticRouter>
+  );
+
+  Router.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
 
   try {
     const app = renderToString(
@@ -23,16 +31,14 @@ const getResponse = ({ url, statsFile }) => {
 
     response = {
       status: routerContext.status,
-      body:
-        `<!DOCTYPE html>\n` +
-        renderToStaticMarkup(
-          <Document
-            body={app}
-            scriptElements={scriptElements}
-            linkElements={linkElements}
-            styleElements={styleElements}
-          />,
-        ),
+      body: `<!DOCTYPE html>\n${renderToStaticMarkup(
+        <Document
+          body={app}
+          scriptElements={scriptElements}
+          linkElements={linkElements}
+          styleElements={styleElements}
+        />,
+      )}`,
     };
   } catch (error) {
     response = {
@@ -48,6 +54,6 @@ export default getResponse;
 const filterHmr = (list) =>
   list.filter(
     (element) =>
-      !element.props.src?.match(/wps-hmr\.[^\.\\\/]+$/) &&
-      !element.props.href?.match(/wps-hmr\.[^\.\\\/]+$/),
+      !element.props.src?.match(/wps-hmr\.[^.\\/]+$/) &&
+      !element.props.href?.match(/wps-hmr\.[^.\\/]+$/),
   );

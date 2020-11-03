@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const Error404Page = ({ staticContext }) => {
@@ -14,6 +15,14 @@ const Error404Page = ({ staticContext }) => {
       </p>
     </div>
   );
+};
+
+Error404Page.propTypes = {
+  staticContext: PropTypes.object,
+};
+
+Error404Page.defaultProps = {
+  staticContext: null,
 };
 
 export default Error404Page;
