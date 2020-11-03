@@ -21,30 +21,22 @@ const getResponse = ({ url, statsFile }) => {
     children: PropTypes.node.isRequired,
   };
 
-  try {
-    const app = renderToString(
-      extractor.collectChunks(<App Router={Router} />),
-    );
-    const scriptElements = filterHmr(extractor.getScriptElements());
-    const linkElements = filterHmr(extractor.getLinkElements());
-    const styleElements = filterHmr(extractor.getStyleElements());
+  const app = renderToString(extractor.collectChunks(<App Router={Router} />));
+  const scriptElements = filterHmr(extractor.getScriptElements());
+  const linkElements = filterHmr(extractor.getLinkElements());
+  const styleElements = filterHmr(extractor.getStyleElements());
 
-    response = {
-      status: routerContext.status,
-      body: `<!DOCTYPE html>\n${renderToStaticMarkup(
-        <Document
-          body={app}
-          scriptElements={scriptElements}
-          linkElements={linkElements}
-          styleElements={styleElements}
-        />,
-      )}`,
-    };
-  } catch (error) {
-    response = {
-      status: 500,
-    };
-  }
+  response = {
+    status: routerContext.status,
+    body: `<!DOCTYPE html>\n${renderToStaticMarkup(
+      <Document
+        body={app}
+        scriptElements={scriptElements}
+        linkElements={linkElements}
+        styleElements={styleElements}
+      />,
+    )}`,
+  };
 
   return response;
 };
