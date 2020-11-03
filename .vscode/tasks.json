@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+		{
+			"label": "A",
+			"type": "npm",
+			"script": "build",
+			"path": "packages/app-abstract-server/",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "B",
+			"type": "npm",
+			"script": "build",
+			"path": "packages/app-abstract-web/",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"dependsOn": [
+				"A",
+				"B"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
