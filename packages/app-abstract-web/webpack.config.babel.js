@@ -21,9 +21,12 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: isServer ? 'node' : 'web',
   stats: isServer ? 'minimal' : 'normal',
+  devtool: isServer
+    ? 'source-map'
+    : isDevelopment && 'eval-cheap-module-source-map',
   entry: isServer
     ? {
-        server: ['./src/server'],
+        server: ['babel-plugin-source-map-support', './src/server'],
       }
     : {
         client: [
@@ -36,6 +39,7 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     path: isServer ? OUTPUT_PATH : PUBLIC_PATH,
     libraryTarget: 'umd',
     filename: isServer ? '[name].js' : '[name].[contenthash].js',
+    devtoolModuleFilenameTemplate: '[resource-path]',
   },
   optimization: isServer
     ? {}
