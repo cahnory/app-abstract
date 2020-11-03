@@ -4,8 +4,8 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "build": "babel src --out-dir lib --copy-files",
-    "watch": "babel src --out-dir lib --copy-files --watch",
+    "build": "babel src --out-dir lib --copy-files --delete-dir-on-start",
+    "watch": "babel src --out-dir lib --copy-files --delete-dir-on-start --watch",
     "lint": "eslint .",
     "start": "NODE_ENV=production node lib",
     "start:dev": "nodemon lib"
