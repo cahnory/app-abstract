@@ -1,0 +1,15 @@
+[
+  -s 1/3 --focus --title "Server"
+  "yarn workspace app-abstract-server start:dev"
+  ..
+  --title "lint"
+  "esw --watch --color packages/*"
+  ..
+  [
+    -s 1/3 --title "Build server"
+    "yarn workspace app-abstract-server watch"
+    :
+    --title "Build web"
+    "yarn workspace app-abstract-web watch"
+  ]
+] 

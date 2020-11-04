@@ -7,5 +7,15 @@
     "packages": [
       "packages/*"
     ]
+  },
+  "scripts": {
+    "dev": "stmux --file .stmuxrc --number --mouse --title \"🚧 Abstract\" -e \"[^\\n]{9999}\"",
+    "lint": "eslint packages/*",
+    "build": "yarn workspace app-abstract-server build && yarn workspace app-abstract-web build"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-watch": "^7.0.0",
+    "stmux": "^1.8.0"
   }
 }

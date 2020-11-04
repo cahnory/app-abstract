@@ -1,3 +1,5 @@
-**/node_modules
 /packages/app-abstract-server/lib
 /packages/app-abstract-web/lib
+
+node_modules
+yarn-error.log
