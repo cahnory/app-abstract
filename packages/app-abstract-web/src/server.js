@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import { ChunkExtractor } from '@loadable/server';
 import { StaticRouter } from 'react-router-dom';
 import Document from './Document';
 import App from './App';
 
-const getResponse = ({ url, statsFile }) => {
+const getResponse = async ({ url, statsFile, graphqlClient }) => {
   const routerContext = { status: 200 };
   const extractor = new ChunkExtractor({ statsFile, entrypoints: 'client' });
   let response = {};
@@ -21,30 +22,39 @@ const getResponse = ({ url, statsFile }) => {
     children: PropTypes.node.isRequired,
   };
 
-  try {
-    const app = renderToString(
-      extractor.collectChunks(<App Router={Router} />),
-    );
-    const scriptElements = filterHmr(extractor.getScriptElements());
-    const linkElements = filterHmr(extractor.getLinkElements());
-    const styleElements = filterHmr(extractor.getStyleElements());
+  const appElement = extractor.collectChunks(
+    <App graphqlClient={graphqlClient} Router={Router} />,
+  );
+  await getDataFromTree(appElement);
+  const app = renderToString(appElement);
+  const initialState = graphqlClient.extract();
+  const linkElements = filterHmr(extractor.getLinkElements());
+  const styleElements = filterHmr(extractor.getStyleElements());
+  const scriptElements = [
+    <script
+      key="apolloInitialState"
+      /* eslint-disable-next-line react/no-danger */
+      dangerouslySetInnerHTML={{
+        __html: `<!--//--><![CDATA[//><!--
+            window.APOLLO_INITIAL_STATE=${JSON.stringify(initialState)};
+          //--><!]]>  `,
+      }}
+    />,
+  ].concat(filterHmr(extractor.getScriptElements()));
 
-    response = {
-      status: routerContext.status,
-      body: `<!DOCTYPE html>\n${renderToStaticMarkup(
-        <Document
-          body={app}
-          scriptElements={scriptElements}
-          linkElements={linkElements}
-          styleElements={styleElements}
-        />,
-      )}`,
-    };
-  } catch (error) {
-    response = {
-      status: 500,
-    };
-  }
+  response = {
+    status: routerContext.status,
+    body: `<!DOCTYPE html>\n${renderToStaticMarkup(
+      <Document
+        lang="fr"
+        body={app}
+        scriptElements={scriptElements}
+        linkElements={linkElements}
+        styleElements={styleElements}
+        initialState={initialState}
+      />,
+    )}`,
+  };
 
   return response;
 };

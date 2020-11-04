@@ -1,11 +1,17 @@
 import express from 'express';
 import morgan from 'morgan';
 import webAppHandler from './handlers/webApp';
+import graphqlHandler from './handlers/graphql';
 import { IS_DEV, PORT } from './constants';
 
 const server = express()
   /* Request logger */
   .use(morgan(IS_DEV ? 'dev' : 'combined'))
+  /** GraphQL handler
+   *  - handle graphql queries
+   *  - serv playground in development
+   * */
+  .use(graphqlHandler)
   /** Web app handler
    *  - render app
    *  - serv static assets

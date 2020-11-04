@@ -86,9 +86,13 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports.publicPath = PUBLIC_ROUTE;
 module.exports.bundlePath = PUBLIC_PATH;
-module.exports.getResponse = ({ url }) => {
+module.exports.getResponse = async (options = {}) => {
   try {
-    return getResponse({ url, statsFile: STATS_PATH });
+    const response = await getResponse({
+      statsFile: STATS_PATH,
+      ...options,
+    });
+    return response;
   } catch (error) {
     return getErrorResult(error);
   }

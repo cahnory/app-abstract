@@ -1,3 +1,11 @@
+/* eslint import/no-extraneous-dependencies: ["error", {"devDependencies": true}] */
+const schemaString = require('app-abstract-schema');
+
+const graphqlOptions = {
+  schemaString,
+  env: 'apollo',
+};
+
 module.exports = {
   root: true,
   env: {
@@ -13,13 +21,24 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
-  plugins: ['react', 'prettier'],
+  plugins: ['graphql', 'react', 'prettier'],
   rules: {
     'prettier/prettier': ['error'],
     'react/jsx-filename-extension': 'off',
     'react/forbid-prop-types': 'off',
     'no-use-before-define': 'off',
     'sort-imports': ['error', { ignoreDeclarationSort: true }],
+    'graphql/capitalized-type-name': ['error', graphqlOptions],
+    'graphql/named-operations': ['error', graphqlOptions],
+    'graphql/no-deprecated-fields': ['warn', graphqlOptions],
+    'graphql/required-fields': [
+      'error',
+      {
+        ...graphqlOptions,
+        requiredFields: ['uuid'],
+      },
+    ],
+    'graphql/template-strings': ['error', graphqlOptions],
   },
   ignorePatterns: ['/lib', 'node_modules'],
 };

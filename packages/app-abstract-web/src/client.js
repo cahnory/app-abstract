@@ -2,8 +2,12 @@ import React from 'react';
 import { hydrate } from 'react-dom';
 import { loadableReady } from '@loadable/component';
 import { BrowserRouter } from 'react-router-dom';
+import { graphqlClient } from './utils/graphql';
 import App from './App';
 
 loadableReady(() =>
-  hydrate(<App Router={BrowserRouter} />, document.getElementById('root')),
+  hydrate(
+    <App graphqlClient={graphqlClient} Router={BrowserRouter} />,
+    document.getElementById('root'),
+  ),
 );
