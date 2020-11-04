@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { ApolloProvider } from '@apollo/client';
 import loadable from '@loadable/component';
 import { Helmet } from 'react-helmet';
 import { Route, Switch } from 'react-router-dom';
@@ -8,8 +10,8 @@ const HomePage = loadable(() => import('./pages/HomePage'), {
   fallback: 'Loading…',
 });
 
-const App = () => (
-  <>
+const App = ({ graphqlClient }) => (
+  <ApolloProvider client={graphqlClient}>
     <Helmet htmlAttributes={{ lang: 'en' }}>
       <title>Hello world</title>
       <meta charSet="utf-8" />
@@ -27,7 +29,11 @@ const App = () => (
         )}
       />
     </Switch>
-  </>
+  </ApolloProvider>
 );
+
+App.propTypes = {
+  graphqlClient: PropTypes.object.isRequired,
+};
 
 export default App;

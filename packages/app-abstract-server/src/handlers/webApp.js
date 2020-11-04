@@ -1,5 +1,6 @@
 import { Router, static as Static } from 'express';
 import { bundlePath, getResponse, publicPath } from 'app-abstract-web';
+import { createClient } from '../utils/graphql';
 import { IS_DEV } from '../constants';
 
 const webAppHandler = new Router()
@@ -11,7 +12,10 @@ const webAppHandler = new Router()
     }),
   )
   .use(async (req, res) => {
-    const { status, body } = await getResponse({ url: req.url });
+    const { status, body } = await getResponse({
+      url: req.url,
+      graphqlClient: createClient({ context: req }),
+    });
     res.status(status).send(body);
   });
 
