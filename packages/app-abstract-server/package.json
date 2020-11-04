@@ -11,11 +11,15 @@
     "start:dev": "nodemon lib"
   },
   "dependencies": {
+    "@apollo/client": "^3.2.5",
     "@babel/runtime": "^7.12.1",
+    "apollo-server-express": "^2.19.0",
+    "app-abstract-schema": "0.1.0",
     "app-abstract-web": "0.1.0",
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "graphql": "^15.4.0",
     "morgan": "^1.10.0",
     "source-map-support": "^0.5.19"
   },
