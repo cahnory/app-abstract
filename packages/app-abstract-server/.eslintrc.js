@@ -16,4 +16,13 @@ module.exports = {
     'sort-imports': ['error', { ignoreDeclarationSort: true }],
   },
   ignorePatterns: ['/lib', 'node_modules'],
+  overrides: [
+    {
+      files: ['**/*.test.js'],
+      env: {
+        jest: true,
+        node: true,
+      },
+    },
+  ],
 };
