@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import { ChunkExtractor } from '@loadable/server';
 import { StaticRouter } from 'react-router-dom';
@@ -11,17 +10,13 @@ const getResponse = ({ url, statsFile }) => {
   const extractor = new ChunkExtractor({ statsFile, entrypoints: 'client' });
   let response = {};
 
-  const Router = ({ children }) => (
-    <StaticRouter location={url} context={routerContext}>
-      {children}
-    </StaticRouter>
+  const app = renderToString(
+    extractor.collectChunks(
+      <StaticRouter location={url} context={routerContext}>
+        <App />
+      </StaticRouter>,
+    ),
   );
-
-  Router.propTypes = {
-    children: PropTypes.node.isRequired,
-  };
-
-  const app = renderToString(extractor.collectChunks(<App Router={Router} />));
   const scriptElements = filterHmr(extractor.getScriptElements());
   const linkElements = filterHmr(extractor.getLinkElements());
   const styleElements = filterHmr(extractor.getStyleElements());

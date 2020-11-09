@@ -5,5 +5,10 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 loadableReady(() =>
-  hydrate(<App Router={BrowserRouter} />, document.getElementById('root')),
+  hydrate(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+    document.getElementById('root'),
+  ),
 );
