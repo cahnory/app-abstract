@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import { ChunkExtractor } from '@loadable/server';
+import { extractCritical } from 'emotion-server';
 import { StaticRouter } from 'react-router-dom';
 import Document from './Document';
 import App from './App';
@@ -17,9 +18,12 @@ const getResponse = ({ url, statsFile }) => {
       </StaticRouter>,
     ),
   );
+  const emotionStyle = extractCritical(app);
   const scriptElements = filterHmr(extractor.getScriptElements());
   const linkElements = filterHmr(extractor.getLinkElements());
-  const styleElements = filterHmr(extractor.getStyleElements());
+  const styleElements = filterHmr(extractor.getStyleElements()).concat(
+    <style data-emotion-css={emotionStyle.ids}>{emotionStyle.css}</style>,
+  );
 
   response = {
     status: routerContext.status,

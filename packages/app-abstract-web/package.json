@@ -12,6 +12,8 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.0",
+    "emotion": "^10.0.27",
+    "emotion-server": "^10.0.27",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
