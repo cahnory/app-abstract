@@ -2,6 +2,7 @@
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { WebpackPluginServe as ServePlugin } from 'webpack-plugin-serve';
 import LoadablePlugin from '@loadable/webpack-plugin';
+import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin';
 import webpack from 'webpack';
 
 import {
@@ -88,6 +89,25 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     ],
   },
   plugins: [
+    new ImageMinimizerPlugin({
+      minimizerOptions: {
+        plugins: [
+          ['gifsicle', { interlaced: true }],
+          ['jpegtran', { progressive: true }],
+          ['optipng', { optimizationLevel: 5 }],
+          [
+            'svgo',
+            {
+              plugins: [
+                {
+                  removeViewBox: false,
+                },
+              ],
+            },
+          ],
+        ],
+      },
+    }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
     }),
