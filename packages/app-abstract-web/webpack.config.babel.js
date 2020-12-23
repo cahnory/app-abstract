@@ -88,9 +88,10 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     ],
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    }),
+    isServer &&
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
     !isServer &&
       new LoadablePlugin({
         filename: STATS_FILENAME,
