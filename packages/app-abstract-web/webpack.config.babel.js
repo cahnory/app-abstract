@@ -1,6 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { WebpackPluginServe as ServePlugin } from 'webpack-plugin-serve';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import LoadablePlugin from '@loadable/webpack-plugin';
 import webpack from 'webpack';
 
@@ -41,21 +42,25 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     filename: isServer ? '[name].js' : '[name].[contenthash].js',
     devtoolModuleFilenameTemplate: '[resource-path]',
   },
-  optimization: isServer
-    ? {}
-    : {
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-          minSize: 0,
-          cacheGroups: {
-            vendors: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
+  optimization: {
+    ...(isServer
+      ? {}
+      : {
+          moduleIds: 'deterministic',
+          runtimeChunk: 'single',
+          splitChunks: {
+            chunks: 'all',
+            minSize: 0,
+            cacheGroups: {
+              vendors: {
+                test: /[\\/]node_modules[\\/]/,
+                name: 'vendors',
+              },
             },
           },
-        },
-      },
+        }),
+    minimizer: ['...', new CssMinimizerPlugin()],
+  },
   module: {
     rules: [
       {
@@ -69,6 +74,24 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
                 '@loadable/babel-plugin',
                 !isServer && isDevelopment && 'react-refresh/babel',
               ].filter(Boolean),
+            },
+          },
+          {
+            loader: 'astroturf/loader',
+            options: { extension: '.css' },
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[local]___[hash:base64:8]',
+              },
             },
           },
         ],
@@ -110,5 +133,8 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
           sockIntegration: 'wps',
         },
       }),
+    new MiniCssExtractPlugin({
+      filename: isDevelopment ? '[name].css' : '[name].[contenthash].css',
+    }),
   ].filter(Boolean),
 });
