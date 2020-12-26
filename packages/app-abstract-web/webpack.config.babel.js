@@ -47,7 +47,9 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
       ? {}
       : {
           moduleIds: 'deterministic',
-          runtimeChunk: 'single',
+          runtimeChunk: {
+            name: 'vendors',
+          },
           splitChunks: {
             chunks: 'all',
             minSize: 0,
