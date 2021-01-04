@@ -1,8 +1,15 @@
 import { Router, static as Static } from 'express';
 import { bundlePath, getResponse, publicPath } from 'app-abstract-web';
+import { IS_DEV } from '../constants';
 
 const webAppHandler = new Router()
-  .use(publicPath, Static(bundlePath))
+  .use(
+    publicPath,
+    Static(bundlePath, {
+      immutable: !IS_DEV,
+      maxAge: IS_DEV ? 0 : 2147483647,
+    }),
+  )
   .use((req, res) => {
     const { status, body } = getResponse({ url: req.url });
     res.status(status).send(body);
