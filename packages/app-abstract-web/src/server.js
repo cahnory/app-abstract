@@ -21,6 +21,21 @@ const getResponse = ({ url, statsFile }) => {
   const linkElements = filterHmr(extractor.getLinkElements());
   const styleElements = filterHmr(extractor.getStyleElements());
 
+  console.log(extractor.stats.publicPath);
+
+  scriptElements.unshift(
+    <script
+      id="__SERVICE_WORKER__"
+      type="application/json"
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          workerPath: `${extractor.stats.publicPath}${extractor.stats.assetsByChunkName.worker[0]}`,
+        }),
+      }}
+    />,
+  );
+
   response = {
     status: routerContext.status,
     body: `<!DOCTYPE html>\n${renderToStaticMarkup(

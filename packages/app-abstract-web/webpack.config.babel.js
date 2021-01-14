@@ -34,6 +34,7 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
           isDevelopment && 'webpack-plugin-serve/client',
           './src/client',
         ].filter(Boolean),
+        worker: './src/serviceWorker',
       },
   output: {
     publicPath: `${PUBLIC_ROUTE}/`,
