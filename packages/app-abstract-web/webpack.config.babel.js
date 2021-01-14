@@ -4,6 +4,8 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import LoadablePlugin from '@loadable/webpack-plugin';
 import webpack from 'webpack';
+import dotenv from 'dotenv';
+import fs from 'fs';
 
 import {
   OUTPUT_PATH,
@@ -11,6 +13,13 @@ import {
   PUBLIC_ROUTE,
   STATS_FILENAME,
 } from './constants';
+
+dotenv.config();
+
+const {
+  HTTPS_KEY_PATH = '../../localhost.key',
+  HTTPS_CERT_PATH = '../../localhost.crt',
+} = process.env;
 
 export default (_, { watch }) => [
   makeConfig({ isServer: false, isDevelopment: watch }),
@@ -127,6 +136,13 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
         static: PUBLIC_PATH,
         status: false,
         hmr: true,
+        client: {
+          address: 'localhost:55555',
+        },
+        https: {
+          key: fs.readFileSync(HTTPS_KEY_PATH),
+          cert: fs.readFileSync(HTTPS_CERT_PATH),
+        },
       }),
     isDevelopment &&
       !isServer &&

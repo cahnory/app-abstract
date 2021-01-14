@@ -1,5 +1,7 @@
 /packages/app-abstract-server/lib
 /packages/app-abstract-web/lib
+/localhost.crt
+/localhost.key
 
 node_modules
 yarn-error.log
