@@ -5,15 +5,17 @@ module.exports = `
   }
 
   type Query {
-    foo: Foo
+    todoList: [Todo]!
   }
 
   type Mutation {
-    setFoo: Foo
+    addTodo(description: String!): Todo!
   }
-
-
-  type Foo {
-    value: String
+  
+  type Todo {
+    id: ID!
+    description: String
+    isComplete: Boolean!
+    isDeleted: Boolean!
   }
 `;

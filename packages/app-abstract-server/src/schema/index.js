@@ -4,7 +4,7 @@ import typeDefs from 'app-abstract-schema';
 import QueryType from './types/QueryType';
 import MutationType from './types/MutationType';
 
-import FooType from './types/FooType';
+import TodoType from './types/TodoType';
 
 export default makeExecutableSchema({
   typeDefs,
@@ -12,6 +12,6 @@ export default makeExecutableSchema({
     Query: QueryType,
     Mutation: MutationType,
 
-    Foo: FooType,
+    Todo: TodoType,
   },
 });

@@ -12,10 +12,11 @@ const webAppHandler = new Router()
     }),
   )
   .use(async (req, res) => {
-    const { status, body } = await getResponse({
+    const { status, body, error } = await getResponse({
       url: req.url,
       graphqlClient: createClient({ context: req }),
     });
+    error && console.log(error);
     res.status(status).send(body);
   });
 

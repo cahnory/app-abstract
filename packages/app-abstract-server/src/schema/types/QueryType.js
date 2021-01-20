@@ -1,5 +1,7 @@
+import { readMany as readManyTodo } from '../../models/Todo';
+
 const QueryType = {
-  foo: () => ({ value: 'bar' }),
+  todoList: () => readManyTodo({ isDeleted: false }),
 };
 
 export default QueryType;

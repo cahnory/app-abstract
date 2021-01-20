@@ -1,7 +1,7 @@
-import setFooMutation from '../mutations/setFooMutation';
+import addTodoMutation from '../mutations/addTodoMutation';
 
 const MutationType = {
-  setFoo: setFooMutation,
+  addTodo: addTodoMutation,
 };
 
 export default MutationType;

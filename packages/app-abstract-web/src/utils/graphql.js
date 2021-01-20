@@ -16,3 +16,19 @@ export const graphqlClient = new ApolloClient({
     },
   }),
 });
+
+export const setComponentFragments = (Component, fragments) => {
+  /* eslint-disable no-param-reassign */
+  Component.fragments = fragments;
+  Component.fragmentNames = Object.entries(fragments).reduce(
+    (acc, [name, document]) => {
+      acc[name] = document.definitions.find(
+        (definition) => definition.kind === 'FragmentDefinition',
+      )?.name.value;
+    },
+    {},
+  );
+  /* eslint-enable no-param-reassign */
+
+  return Component;
+};
