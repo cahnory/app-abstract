@@ -10,8 +10,8 @@ const webAppHandler = new Router()
       maxAge: IS_DEV ? 0 : 2147483647,
     }),
   )
-  .use((req, res) => {
-    const { status, body } = getResponse({ url: req.url });
+  .use(async (req, res) => {
+    const { status, body } = await getResponse({ url: req.url });
     res.status(status).send(body);
   });
 
