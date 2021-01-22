@@ -6,9 +6,10 @@ import { Helmet } from 'react-helmet';
 import { Route, Switch } from 'react-router-dom';
 import Error404Page from './pages/Error404Page';
 
-const HomePage = loadable(() => import('./pages/HomePage'), {
-  fallback: 'Loading…',
-});
+const fallback = 'Page loading…';
+
+const HomePage = loadable(() => import('./pages/HomePage'), { fallback });
+const TodoPage = loadable(() => import('./pages/TodoPage'), { fallback });
 
 const App = ({ graphqlClient }) => (
   <ApolloProvider client={graphqlClient}>
@@ -22,6 +23,7 @@ const App = ({ graphqlClient }) => (
     </Helmet>
     <Switch>
       <Route exact path="/" render={() => <HomePage />} />
+      <Route exact path="/todo" render={() => <TodoPage />} />
       <Route
         path="*"
         render={({ staticContext }) => (

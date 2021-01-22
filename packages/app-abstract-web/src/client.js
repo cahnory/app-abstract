@@ -13,3 +13,10 @@ loadableReady(() =>
     document.getElementById('root'),
   ),
 );
+
+hydrate(
+  <BrowserRouter>
+    <App graphqlClient={graphqlClient} />
+  </BrowserRouter>,
+  document.getElementById('root'),
+);

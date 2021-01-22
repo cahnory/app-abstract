@@ -36,7 +36,7 @@ const makeConfig = ({ isServer = false, isDevelopment = false }) => ({
     : isDevelopment && 'eval-cheap-module-source-map',
   entry: isServer
     ? {
-        server: ['babel-plugin-source-map-support', './src/server'],
+        server: ['source-map-support/register', './src/server'],
       }
     : {
         client: [
